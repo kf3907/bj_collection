@@ -1,56 +1,36 @@
 package bj01157;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        //입력 받기
-        String[] str = sc.next().toUpperCase().split("");
-        char currentChar = 'A';
-        //알파벳 대문자 배열 만들기
-        String[] alphabets = new String[26];
-        for (int i = 0; i< 26; i++) {
-            alphabets[i] =String.valueOf(currentChar);
-            currentChar++;
+        int[] counts = new int[26];
+        String s = br.readLine();
+
+        for (int i = 0; i < s.length(); i++) {
+            if ('a' <= s.charAt(i) && s.charAt(i) <= 'z') {
+                counts[s.charAt(i) - 97]++; // s가 소문자일 경우
+            } else {
+                counts[s.charAt(i) - 65]++; // s가 대문자일 경우
+            }
         }
 
-        //각 알파벳의 개수 저장
-        long[] counts = new long[26];
-        for(var ref = new Object() {
-            int i = 0;
-        }; ref.i <counts.length; ref.i++) {
-            counts[ref.i] = Arrays.stream(str).filter(s -> s.equals(alphabets[ref.i])).count();
-        }
-
-        //가장 많이 사용된 알파벳을 출력
-        long max = 0;
-        int maxIndex = 0;
-        for(int i = 0; i<counts.length; i++) {
-            if(counts[i]>max) {
+        int max = -1;//counts 걊의 기본값이 0이기 때문에 -1로 초기화
+        char ch = '?';
+        for (int i = 0; i < 26; i++) {
+            if (counts[i] > max) {
                 max = counts[i];
-                maxIndex = i;
+                ch = (char) (i + 65);
             }
-//            else {
-//                counts[i] -= 1; // A가 먼저 나오면서 예제입력 3번에서 오류 발생
-//            }
-        }
-        //사용된 알파벳의 수가 같을 때 ?출력
-        //같은 개수의값이 2개이상인가 확인 로직
-        int maxNumberCount = 0;
-        for (long count : counts) {
-            if (count == max) {
-                maxNumberCount++;
+            else if (counts[i] == max) {
+                ch = '?'; // 같은 개수의 count가 있다면 ?로 변환
             }
         }
-        //출력
-        if(maxNumberCount>1) {
-            System.out.println("?");
-        } else {
-            System.out.println(alphabets[maxIndex]);
-        }
-
+        System.out.print(ch);
     }
+
 }
